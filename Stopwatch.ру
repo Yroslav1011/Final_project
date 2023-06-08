@@ -1,0 +1,63 @@
+from pygame import  *
+
+
+# Определяем цвета
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+
+# Определяем размеры экрана
+win_width = 400
+win_height = 300
+
+# Создаем экран
+window = display.set_mode((win_width,win_height ))
+display.set_caption("Секундомер")
+
+
+font = font.Font(None, 36)
+
+# Создаем переменные для секундомера
+start_ticks = 0
+past_time = 0
+clock = False
+
+# Создаем кнопки
+start_button = Rect(50, 200, 100, 50)
+stop_button = Rect(250, 200, 100, 50)
+
+# Основной цикл программы
+while True:
+    # Обработка событий
+    for e in event.get():
+        if e.type == QUIT:
+            quit()
+        elif e.type == MOUSEBUTTONDOWN:
+           
+            if start_button.collidepoint(e.pos):
+                clock = True
+                start_ticks =time.get_ticks()
+            elif stop_button.collidepoint(e.pos):
+                clock = False
+                past_time = 0
+
+    
+    window.fill(WHITE)
+
+    # Отображение кнопок
+    draw.rect(window, BLACK, start_button)
+    draw.rect(window, BLACK, stop_button)
+
+    # Отображение текста на кнопках
+    start_text = font.render("Старт", True, WHITE)
+    stop_text = font.render("Стоп", True, WHITE)
+    window.blit(start_text, (start_button.x + 20, start_button.y + 10))
+    window.blit(stop_text, (stop_button.x + 25, stop_button.y + 10))
+
+    # Отображение времени
+    if clock:
+        past_time = (time.get_ticks() - start_ticks) // 1000
+    time_text = font.render("Время: " + str(past_time), True, BLACK)
+    window.blit(time_text, (50, 50))
+
+    
+    display.update()
